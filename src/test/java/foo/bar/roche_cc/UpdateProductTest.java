@@ -1,7 +1,6 @@
 package foo.bar.roche_cc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.repository.ProductRepository;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
@@ -17,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -47,20 +48,16 @@ class UpdateProductTest {
 
     @Test
     void shallReturnSuccessCodeAndUpdateProduct() throws Exception {
-        Product beforeUpdate = productRepository.getById(idOfExistingProduct).get();
+        Map<String, Object> beforeUpdate = productRepository.getByIdRaw(idOfExistingProduct);
 
         executeSut(idOfExistingProduct)
                 .andExpect(status().is2xxSuccessful());
 
+        Map<String, Object> afterUpdate = productRepository.getByIdRaw(idOfExistingProduct);
 
-        Product afterUpdate = productRepository.getById(idOfExistingProduct).get();
-
-        Product expected = Product.builder()
-                .createdAt(beforeUpdate.getCreatedAt())
-                .id(idOfExistingProduct)
-                .name(sutInput.getName())
-                .price(sutInput.getPrice().setScale(2))
-                .build();
+        Map<String, Object> expected = new HashMap<>(beforeUpdate);
+        expected.put("name", sutInput.getName());
+        expected.put("price", sutInput.getPrice().setScale(2));
         assertThat(afterUpdate, is(expected));
     }
 

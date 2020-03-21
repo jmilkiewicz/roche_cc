@@ -76,11 +76,11 @@ class CreateProductTest {
     private void assertProductPropertiesSaved(String idOfCreatedProduct, BigDecimal expectedPrice, String expectedName) {
         Map<String, Object> productProps = productRepository.getByIdRaw(idOfCreatedProduct);
 
-        assertThat(productProps,hasEntry("sku", idOfCreatedProduct));
-        assertThat(productProps,hasEntry("name", expectedName));
-        assertThat(productProps,hasEntry("price", expectedPrice));
-        assertThat(productProps,hasEntry("deleted", FALSE));
-        assertThat(productProps,hasEntry(is("createdAt"), notNullValue()));
+        assertThat(productProps, hasEntry("sku", idOfCreatedProduct));
+        assertThat(productProps, hasEntry("name", expectedName));
+        assertThat(productProps, hasEntry("price", expectedPrice));
+        assertThat(productProps, hasEntry("deleted", FALSE));
+        assertThat(productProps, hasEntry(is("createdAt"), notNullValue()));
     }
 
     private String getIdOfCreatedProduct(MvcResult mvcResult) {
