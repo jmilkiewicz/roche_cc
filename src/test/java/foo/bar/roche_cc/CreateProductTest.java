@@ -1,7 +1,6 @@
 package foo.bar.roche_cc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.repository.ProductRepository;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import org.hamcrest.Matchers;
@@ -15,15 +14,16 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresent;
+import static java.lang.Boolean.FALSE;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,13 +74,13 @@ class CreateProductTest {
     }
 
     private void assertProductPropertiesSaved(String idOfCreatedProduct, BigDecimal expectedPrice, String expectedName) {
-        Optional<Product> newProductMaybe = productRepository.getById(idOfCreatedProduct);
-        assertThat(newProductMaybe, isPresent());
-        Product newProduct = newProductMaybe.get();
-        assertThat(newProduct, hasProperty("id", is(idOfCreatedProduct)));
-        assertThat(newProduct, hasProperty("name", is(expectedName)));
-        assertThat(newProduct, hasProperty("price", is(expectedPrice)));
-        assertThat(newProduct, hasProperty("createdAt", notNullValue()));
+        Map<String, Object> productProps = productRepository.getByIdRaw(idOfCreatedProduct);
+
+        assertThat(productProps,hasEntry("sku", idOfCreatedProduct));
+        assertThat(productProps,hasEntry("name", expectedName));
+        assertThat(productProps,hasEntry("price", expectedPrice));
+        assertThat(productProps,hasEntry("deleted", FALSE));
+        assertThat(productProps,hasEntry(is("createdAt"), notNullValue()));
     }
 
     private String getIdOfCreatedProduct(MvcResult mvcResult) {

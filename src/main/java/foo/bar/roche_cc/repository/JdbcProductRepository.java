@@ -49,7 +49,7 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
     }
 
     @Override
-    public Map<String, Object> getById2(String productId) {
+    public Map<String, Object> getByIdRaw(String productId) {
         return jdbcTemplate.queryForMap("select * from Products where sku = ?", new Object[]{productId});
     }
 

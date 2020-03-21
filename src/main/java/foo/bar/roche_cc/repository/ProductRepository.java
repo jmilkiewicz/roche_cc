@@ -11,7 +11,7 @@ public interface ProductRepository extends ProductSaver {
 
     Optional<Product> getById(String productId);
 
-    Map<String, Object> getById2(String productId);
+    Map<String, Object> getByIdRaw(String productId);
 
     void deleteAll();
 
