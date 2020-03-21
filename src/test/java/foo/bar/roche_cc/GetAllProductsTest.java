@@ -54,10 +54,7 @@ class GetAllProductsTest {
 
     @Test
     void shallReturnAllProducts() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/products")
-                .accept(APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn();
+        MvcResult mvcResult = executeSut();
 
         List<Product> returnedProducts = readFromBody(mvcResult);
 
@@ -69,15 +66,19 @@ class GetAllProductsTest {
     void shallOmitMarkedAsDeleted() throws Exception {
         productRepository.markAsDeleted(productId1);
 
-        MvcResult mvcResult = mockMvc.perform(get("/products")
-                .accept(APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andReturn();
+        MvcResult mvcResult = executeSut();
 
         List<Product> returnedProducts = readFromBody(mvcResult);
 
         Product[] expectedProducts = getProductsByIds(productId2);
         assertThat(returnedProducts, Matchers.containsInAnyOrder(expectedProducts));
+    }
+
+    private MvcResult executeSut() throws Exception {
+        return mockMvc.perform(get("/products")
+                .accept(APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
     }
 
     private List<Product> readFromBody(MvcResult mvcResult) throws java.io.IOException {
@@ -86,6 +87,7 @@ class GetAllProductsTest {
 
     private Product[] getProductsByIds(String... productIdIds) {
         return Arrays.asList(productIdIds).stream()
+                //we can consider calling   getByIdRaw and get rid off getById
                 .map(productRepository::getById)
                 .map(Optional::get)
                 .collect(Collectors.toList())
