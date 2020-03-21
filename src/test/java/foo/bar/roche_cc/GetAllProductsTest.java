@@ -1,5 +1,6 @@
 package foo.bar.roche_cc;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.repository.ProductRepository;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -52,11 +54,10 @@ class GetAllProductsTest {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        List<Product> responseBody = objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), List.class);
+        List<Product> responseBody = objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), new TypeReference<ArrayList<Product>>() {});
 
-
-        assertThat(responseBody, Matchers.containsInAnyOrder(getProductsByIds(productId1, productId2)));
-
+        Product[] expectedProducts = getProductsByIds(productId1, productId2);
+        assertThat(responseBody, Matchers.containsInAnyOrder(expectedProducts));
     }
 
     private Product[] getProductsByIds(String productId1, String productId2) {
