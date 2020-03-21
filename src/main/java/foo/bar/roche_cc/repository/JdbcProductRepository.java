@@ -73,7 +73,7 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
 
     @Override
     public boolean updateProduct(String productId, UpdateProductInput updateProductInput) {
-        int rowsAffected = jdbcTemplate.update("update Products set name = ?, price =? where sku = ?", updateProductInput.getName(), updateProductInput.getPrice(), productId);
+        int rowsAffected = jdbcTemplate.update("update Products set name = ?, price =? where sku = ? and deleted=false", updateProductInput.getName(), updateProductInput.getPrice(), productId);
         return rowsAffected > 0;
     }
 

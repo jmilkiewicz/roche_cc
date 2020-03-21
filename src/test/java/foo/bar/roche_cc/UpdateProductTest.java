@@ -75,6 +75,16 @@ class UpdateProductTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    void shallReturnNotFoundWhenProductIsMarkedForDeletion() throws Exception {
+        productRepository.markAsDeleted(idOfExistingProduct);
+
+        mockMvc.perform(put("/products/{productId}", idOfExistingProduct)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(sutInput)))
+                .andExpect(status().isNotFound());
+    }
+
 
 
 }
