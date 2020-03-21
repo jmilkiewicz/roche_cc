@@ -43,6 +43,10 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@RequestBody UpdateProductInput input, @PathVariable String productId) {
         boolean updated = updateProductUseCase.execute(productId, input);
+        return noContentOrNotFound(updated);
+    }
+
+    private ResponseEntity<?> noContentOrNotFound(boolean updated) {
         if (updated) {
             return ResponseEntity.noContent().build();
         }
@@ -52,7 +56,7 @@ public class ProductController {
     @DeleteMapping("/{productId}")
     public ResponseEntity<?> deleteProduct(@PathVariable String productId) {
         boolean updated = deleteProductUseCase.execute(productId);
-        return ResponseEntity.ok().build();
+        return noContentOrNotFound(updated);
     }
 
     @GetMapping()
