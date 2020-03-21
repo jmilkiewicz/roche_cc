@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -41,12 +42,23 @@ class DeleteProductTest {
     void shallReturnSuccessCodeAndMarkAsDeleted() throws Exception {
         Map<String,Object> beforeDelete = productRepository.getById2(idOfExistingProduct);
 
-        mockMvc.perform(delete("/products/{productId}", idOfExistingProduct))
+        executeSut(idOfExistingProduct)
                 .andExpect(status().is2xxSuccessful());
 
         Map<String, Object> expected = new HashMap<>(beforeDelete);
         expected.put("deleted", Boolean.TRUE);
         assertThat(productRepository.getById2(idOfExistingProduct), is(expected));
+    }
+
+    private ResultActions executeSut(String productId) throws Exception {
+        return mockMvc.perform(delete("/products/{productId}", productId));
+    }
+
+
+    @Test
+    void shallReturnNotFoundWhenProductDoesNotExists() throws Exception {
+        String notExistingProductId = idOfExistingProduct + "abc";
+        executeSut(notExistingProductId).andExpect(status().isNotFound());
     }
 
 
