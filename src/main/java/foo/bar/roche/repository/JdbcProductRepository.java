@@ -1,12 +1,12 @@
-package foo.bar.roche_cc.repository;
+package foo.bar.roche.repository;
 
-import foo.bar.roche_cc.model.Product;
-import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
-import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
-import foo.bar.roche_cc.usecase.deleteProduct.updateProduct.ProductDeleter;
-import foo.bar.roche_cc.usecase.getAllProducts.AllProductsFetcher;
-import foo.bar.roche_cc.usecase.updateProduct.ProductUpdater;
-import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
+import foo.bar.roche.model.Product;
+import foo.bar.roche.usecase.createProduct.CreateProductInput;
+import foo.bar.roche.usecase.createProduct.ProductSaver;
+import foo.bar.roche.usecase.deleteProduct.updateProduct.ProductDeleter;
+import foo.bar.roche.usecase.getAllProducts.AllProductsFetcher;
+import foo.bar.roche.usecase.updateProduct.ProductUpdater;
+import foo.bar.roche.usecase.updateProduct.UpdateProductInput;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;

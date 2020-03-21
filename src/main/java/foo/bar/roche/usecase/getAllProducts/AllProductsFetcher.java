@@ -1,6 +1,6 @@
-package foo.bar.roche_cc.usecase.getAllProducts;
+package foo.bar.roche.usecase.getAllProducts;
 
-import foo.bar.roche_cc.model.Product;
+import foo.bar.roche.model.Product;
 
 import java.util.List;
 

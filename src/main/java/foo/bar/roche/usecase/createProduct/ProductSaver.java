@@ -1,4 +1,4 @@
-package foo.bar.roche_cc.usecase.createProduct;
+package foo.bar.roche.usecase.createProduct;
 
 import java.time.Instant;
 

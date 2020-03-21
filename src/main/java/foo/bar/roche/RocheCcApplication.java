@@ -1,4 +1,4 @@
-package foo.bar.roche_cc;
+package foo.bar.roche;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

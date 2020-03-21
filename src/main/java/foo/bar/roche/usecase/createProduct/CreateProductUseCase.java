@@ -1,4 +1,4 @@
-package foo.bar.roche_cc.usecase.createProduct;
+package foo.bar.roche.usecase.createProduct;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,7 +1,7 @@
-package foo.bar.roche_cc;
+package foo.bar.roche;
 
-import foo.bar.roche_cc.repository.ProductRepository;
-import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
+import foo.bar.roche.repository.ProductRepository;
+import foo.bar.roche.usecase.createProduct.CreateProductInput;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

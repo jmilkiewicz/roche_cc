@@ -1,4 +1,4 @@
-package foo.bar.roche_cc.model;
+package foo.bar.roche.model;
 
 import lombok.Builder;
 import lombok.Data;

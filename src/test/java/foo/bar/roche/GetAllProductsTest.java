@@ -1,10 +1,10 @@
-package foo.bar.roche_cc;
+package foo.bar.roche;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import foo.bar.roche_cc.model.Product;
-import foo.bar.roche_cc.repository.ProductRepository;
-import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
+import foo.bar.roche.model.Product;
+import foo.bar.roche.repository.ProductRepository;
+import foo.bar.roche.usecase.createProduct.CreateProductInput;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

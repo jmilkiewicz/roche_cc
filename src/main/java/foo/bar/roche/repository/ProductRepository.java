@@ -1,7 +1,7 @@
-package foo.bar.roche_cc.repository;
+package foo.bar.roche.repository;
 
-import foo.bar.roche_cc.model.Product;
-import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
+import foo.bar.roche.model.Product;
+import foo.bar.roche.usecase.createProduct.ProductSaver;
 
 import java.util.Map;
 import java.util.Optional;

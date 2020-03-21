@@ -1,12 +1,12 @@
-package foo.bar.roche_cc.controller;
+package foo.bar.roche.controller;
 
-import foo.bar.roche_cc.model.Product;
-import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
-import foo.bar.roche_cc.usecase.createProduct.CreateProductUseCase;
-import foo.bar.roche_cc.usecase.deleteProduct.updateProduct.DeleteProductUseCase;
-import foo.bar.roche_cc.usecase.getAllProducts.GetAllProductsUseCase;
-import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
-import foo.bar.roche_cc.usecase.updateProduct.UpdateProductUseCase;
+import foo.bar.roche.model.Product;
+import foo.bar.roche.usecase.createProduct.CreateProductInput;
+import foo.bar.roche.usecase.createProduct.CreateProductUseCase;
+import foo.bar.roche.usecase.deleteProduct.updateProduct.DeleteProductUseCase;
+import foo.bar.roche.usecase.getAllProducts.GetAllProductsUseCase;
+import foo.bar.roche.usecase.updateProduct.UpdateProductInput;
+import foo.bar.roche.usecase.updateProduct.UpdateProductUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;

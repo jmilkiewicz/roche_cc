@@ -1,4 +1,4 @@
-package foo.bar.roche_cc.usecase.deleteProduct.updateProduct;
+package foo.bar.roche.usecase.deleteProduct.updateProduct;
 
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
