@@ -59,6 +59,11 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
     }
 
     @Override
+    public void markAsDeleted(String productId) {
+        deleteProduct(productId);
+    }
+
+    @Override
     public String saveProduct(CreateProductInput productInput, Instant now) {
         String id = UUID.randomUUID().toString();
         jdbcTemplate.update("insert into Products(sku, createdAt, name, price) values(?,?, ?,?) ",
@@ -74,7 +79,7 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
 
     @Override
     public List<Product> getAllProducts() {
-        return jdbcTemplate.query("select * from Products", productRowMapper);
+        return jdbcTemplate.query("select * from Products where deleted=false", productRowMapper);
     }
 
     @Override
