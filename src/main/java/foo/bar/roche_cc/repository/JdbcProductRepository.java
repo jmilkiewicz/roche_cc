@@ -16,7 +16,6 @@ import java.util.UUID;
 
 @Repository
 public class JdbcProductRepository implements ProductRepository, ProductSaver, ProductUpdater {
-    private final JdbcTemplate jdbcTemplate;
     private static final RowMapper<Product> productRowMapper = (rs, __) ->
             Product.builder()
                     .id(rs.getString("sku"))
@@ -24,7 +23,7 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
                     .name(rs.getString("name"))
                     .price(rs.getBigDecimal("price"))
                     .build();
-
+    private final JdbcTemplate jdbcTemplate;
 
 
     public JdbcProductRepository(JdbcTemplate jdbcTemplate) {
@@ -43,6 +42,11 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
                 .stream()
                 .findFirst();
 
+    }
+
+    @Override
+    public void deleteAll() {
+        jdbcTemplate.update("delete from Products");
     }
 
     @Override

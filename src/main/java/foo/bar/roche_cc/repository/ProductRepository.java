@@ -9,4 +9,6 @@ public interface ProductRepository extends ProductSaver {
     Integer countAll();
 
     Optional<Product> getById(String idOfCreatedProduct);
+
+    void deleteAll();
 }
