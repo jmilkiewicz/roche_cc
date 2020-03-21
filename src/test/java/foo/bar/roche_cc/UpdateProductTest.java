@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -48,9 +49,7 @@ class UpdateProductTest {
     void shallReturnSuccessCodeAndUpdateProduct() throws Exception {
         Product beforeUpdate = productRepository.getById(idOfExistingProduct).get();
 
-        mockMvc.perform(put("/products/{productId}", idOfExistingProduct)
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(sutInput)))
+        executeSut(idOfExistingProduct)
                 .andExpect(status().is2xxSuccessful());
 
 
@@ -69,22 +68,23 @@ class UpdateProductTest {
     void shallReturnNotFoundWhenProductDoesNotExists() throws Exception {
         String notExistingProductId = idOfExistingProduct + "XXX";
 
-        mockMvc.perform(put("/products/{productId}", notExistingProductId)
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(sutInput)))
+        executeSut(notExistingProductId)
                 .andExpect(status().isNotFound());
+    }
+
+    private ResultActions executeSut(String productId) throws Exception {
+        return mockMvc.perform(put("/products/{productId}", productId)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(sutInput)));
     }
 
     @Test
     void shallReturnNotFoundWhenProductIsMarkedForDeletion() throws Exception {
         productRepository.markAsDeleted(idOfExistingProduct);
 
-        mockMvc.perform(put("/products/{productId}", idOfExistingProduct)
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(sutInput)))
+        executeSut(idOfExistingProduct)
                 .andExpect(status().isNotFound());
     }
-
 
 
 }

@@ -13,7 +13,7 @@ public class GetAllProductsUseCase {
         this.allProductsFetcher = allProductsFetcher;
     }
 
-    public List<Product> execute(){
+    public List<Product> execute() {
         return allProductsFetcher.getAllProducts();
     }
 }

@@ -6,7 +6,7 @@ import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
 import java.util.Map;
 import java.util.Optional;
 
-public interface ProductRepository extends ProductSaver{
+public interface ProductRepository extends ProductSaver {
     Integer countAll();
 
     Optional<Product> getById(String productId);
