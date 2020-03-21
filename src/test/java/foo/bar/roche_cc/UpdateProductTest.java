@@ -51,7 +51,7 @@ class UpdateProductTest {
                 .createdAt(oldProduct.getCreatedAt())
                 .id(productId)
                 .name(sutInput.getName())
-                .price(sutInput.getPrice())
+                .price(sutInput.getPrice().setScale(2))
                 .build();
 
 

@@ -3,6 +3,8 @@ package foo.bar.roche_cc.repository;
 import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
+import foo.bar.roche_cc.usecase.updateProduct.ProductUpdater;
+import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -13,7 +15,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class JdbcProductRepository implements ProductRepository, ProductSaver {
+public class JdbcProductRepository implements ProductRepository, ProductSaver, ProductUpdater {
     private final JdbcTemplate jdbcTemplate;
     private static final RowMapper<Product> productRowMapper = (rs, __) ->
             Product.builder()
@@ -49,5 +51,10 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver {
         jdbcTemplate.update("insert into Products(sku, createdAt, name, price) values(?,?, ?,?) ",
                 id, Timestamp.from(now), productInput.getName(), productInput.getPrice());
         return id;
+    }
+
+    @Override
+    public void updateProduct(String productId, UpdateProductInput updateProductInput) {
+        jdbcTemplate.update("update Products set name = ?, price =? where sku = ?", updateProductInput.getName(), updateProductInput.getPrice(), productId);
     }
 }

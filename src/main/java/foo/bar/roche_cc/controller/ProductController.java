@@ -3,6 +3,7 @@ package foo.bar.roche_cc.controller;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductUseCase;
 import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
+import foo.bar.roche_cc.usecase.updateProduct.UpdateProductUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -14,9 +15,11 @@ import java.time.Instant;
 @RequestMapping("/products")
 public class ProductController {
     private final CreateProductUseCase createProductUseCase;
+    private final UpdateProductUseCase updateProductUseCase;
 
-    public ProductController(CreateProductUseCase createProductUseCase) {
+    public ProductController(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase) {
         this.createProductUseCase = createProductUseCase;
+        this.updateProductUseCase = updateProductUseCase;
     }
 
     @PostMapping()
@@ -31,6 +34,7 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@RequestBody UpdateProductInput input, @PathVariable String productId) {
+        updateProductUseCase.execute(productId, input);
 
         return ResponseEntity.ok().build();
     }
