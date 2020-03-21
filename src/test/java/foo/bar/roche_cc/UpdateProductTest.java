@@ -57,5 +57,18 @@ class UpdateProductTest {
         assertThat(afterUpdate, is(expected));
     }
 
+    @Test
+    void shallReturnNotFoundWhenProductDoesNotExists() throws Exception {
+        String productId = productRepository.saveProduct(CreateProductInput.builder().name(sutInput.getName() + "!").price(sutInput.getPrice().add(BigDecimal.ONE)).build(), Instant.now().minus(3, ChronoUnit.HOURS));
+
+        String notExistingProductId = productId + "XXX";
+        mockMvc.perform(put("/products/{productId}", notExistingProductId)
+                .contentType("application/json")
+                .content(objectMapper.writeValueAsString(sutInput)))
+                .andExpect(status().isNotFound());
+
+    }
+
+
 
 }
