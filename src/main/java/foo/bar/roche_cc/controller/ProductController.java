@@ -1,8 +1,7 @@
 package foo.bar.roche_cc.controller;
 
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
-import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
-import org.springframework.beans.factory.annotation.Autowired;
+import foo.bar.roche_cc.usecase.createProduct.CreateProductUseCase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,14 +15,15 @@ import java.time.Instant;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+    private final CreateProductUseCase createProductUseCase;
 
-    @Autowired
-    private ProductSaver productSaver;
+    public ProductController(CreateProductUseCase createProductUseCase) {
+        this.createProductUseCase = createProductUseCase;
+    }
 
     @PostMapping()
     public ResponseEntity<?> createProduct(@RequestBody CreateProductInput input, UriComponentsBuilder b) {
-
-        String productId = productSaver.saveProduct(input, Instant.now());
+        String productId = createProductUseCase.execute(input, Instant.now());
 
         UriComponents uriComponents =
                 b.path("/products/{productId}").buildAndExpand(productId);
