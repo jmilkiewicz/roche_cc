@@ -3,6 +3,7 @@ package foo.bar.roche_cc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import foo.bar.roche_cc.repository.ProductRepository;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,6 +15,7 @@ import java.math.BigDecimal;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -37,7 +39,8 @@ class CreateProductTest {
         mockMvc.perform(post("/products")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(input)))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+				.andExpect(header().string("Location", Matchers.matchesPattern("http://.+/products/.+")));
     }
 
     @Test
