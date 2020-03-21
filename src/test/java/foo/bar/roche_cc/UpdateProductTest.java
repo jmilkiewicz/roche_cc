@@ -5,6 +5,7 @@ import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.repository.ProductRepository;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,24 +34,29 @@ class UpdateProductTest {
 
     @Autowired
     private ProductRepository productRepository;
+    private String idOfExistingProduct;
 
+
+    @BeforeEach
+    void createSampleProduct() {
+        idOfExistingProduct = productRepository.saveProduct(CreateProductInput.builder().name(sutInput.getName() + "!").price(sutInput.getPrice().add(BigDecimal.ONE)).build(), Instant.now().minus(3, ChronoUnit.HOURS));
+    }
 
     @Test
     void shallReturnSuccessCodeAndUpdateProduct() throws Exception {
-        String productId = productRepository.saveProduct(CreateProductInput.builder().name(sutInput.getName() + "!").price(sutInput.getPrice().add(BigDecimal.ONE)).build(), Instant.now().minus(3, ChronoUnit.HOURS));
-        Product beforeUpdate = productRepository.getById(productId).get();
+        Product beforeUpdate = productRepository.getById(idOfExistingProduct).get();
 
-        mockMvc.perform(put("/products/{productId}", productId)
+        mockMvc.perform(put("/products/{productId}", idOfExistingProduct)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(sutInput)))
                 .andExpect(status().is2xxSuccessful());
 
 
-        Product afterUpdate = productRepository.getById(productId).get();
+        Product afterUpdate = productRepository.getById(idOfExistingProduct).get();
 
         Product expected = Product.builder()
                 .createdAt(beforeUpdate.getCreatedAt())
-                .id(productId)
+                .id(idOfExistingProduct)
                 .name(sutInput.getName())
                 .price(sutInput.getPrice().setScale(2))
                 .build();
@@ -59,14 +65,12 @@ class UpdateProductTest {
 
     @Test
     void shallReturnNotFoundWhenProductDoesNotExists() throws Exception {
-        String productId = productRepository.saveProduct(CreateProductInput.builder().name(sutInput.getName() + "!").price(sutInput.getPrice().add(BigDecimal.ONE)).build(), Instant.now().minus(3, ChronoUnit.HOURS));
+        String notExistingProductId = idOfExistingProduct + "XXX";
 
-        String notExistingProductId = productId + "XXX";
         mockMvc.perform(put("/products/{productId}", notExistingProductId)
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(sutInput)))
                 .andExpect(status().isNotFound());
-
     }
 
 

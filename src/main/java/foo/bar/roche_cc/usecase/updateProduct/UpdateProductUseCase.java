@@ -10,7 +10,6 @@ public class UpdateProductUseCase {
         this.productUpdater = productUpdater;
     }
 
-
     public boolean execute(String productId, UpdateProductInput updateProductInput) {
         return productUpdater.updateProduct(productId, updateProductInput);
     }
