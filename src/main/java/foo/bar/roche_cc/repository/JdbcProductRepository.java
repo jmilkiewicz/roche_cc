@@ -46,8 +46,8 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver {
     @Override
     public String saveProduct(CreateProductInput productInput, Instant now) {
         String id = UUID.randomUUID().toString();
-        jdbcTemplate.update("insert into Products(sku, createdAt) values(?,?) ",
-                id, Timestamp.from(now));
+        jdbcTemplate.update("insert into Products(sku, createdAt, name, price) values(?,?, ?,?) ",
+                id, Timestamp.from(now), productInput.getName(), productInput.getPrice());
         return id;
     }
 }

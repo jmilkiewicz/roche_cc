@@ -72,7 +72,7 @@ class CreateProductTest {
         assertThat(newProductMaybe, isPresent());
         Product newProduct = newProductMaybe.get();
         assertThat(newProduct, hasProperty("name", is(input.getName())));
-        assertThat(newProduct, hasProperty("price", is(input.getPrice())));
+        assertThat(newProduct, hasProperty("price", is(input.getPrice().setScale(2))));
         assertThat(newProduct, hasProperty("createdAt", notNullValue()));
 
     }
