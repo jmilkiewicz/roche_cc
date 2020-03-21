@@ -1,6 +1,7 @@
 package foo.bar.roche_cc.usecase.updateProduct;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 public class UpdateProductUseCase {
@@ -10,6 +11,7 @@ public class UpdateProductUseCase {
         this.productUpdater = productUpdater;
     }
 
+    @Transactional
     public boolean execute(String productId, UpdateProductInput updateProductInput) {
         return productUpdater.updateProduct(productId, updateProductInput);
     }
