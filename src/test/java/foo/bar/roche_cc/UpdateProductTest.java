@@ -38,7 +38,7 @@ class UpdateProductTest {
     @Test
     void shallReturnSuccessCodeAndUpdateProduct() throws Exception {
         String productId = productRepository.saveProduct(CreateProductInput.builder().name(sutInput.getName() + "!").price(sutInput.getPrice().add(BigDecimal.ONE)).build(), Instant.now().minus(3, ChronoUnit.HOURS));
-        Product oldProduct = productRepository.getById(productId).get();
+        Product beforeUpdate = productRepository.getById(productId).get();
 
         mockMvc.perform(put("/products/{productId}", productId)
                 .contentType("application/json")
@@ -46,16 +46,15 @@ class UpdateProductTest {
                 .andExpect(status().is2xxSuccessful());
 
 
-        Product newProduct = productRepository.getById(productId).get();
+        Product afterUpdate = productRepository.getById(productId).get();
+
         Product expected = Product.builder()
-                .createdAt(oldProduct.getCreatedAt())
+                .createdAt(beforeUpdate.getCreatedAt())
                 .id(productId)
                 .name(sutInput.getName())
                 .price(sutInput.getPrice().setScale(2))
                 .build();
-
-
-        assertThat(newProduct, is(expected));
+        assertThat(afterUpdate, is(expected));
     }
 
 
