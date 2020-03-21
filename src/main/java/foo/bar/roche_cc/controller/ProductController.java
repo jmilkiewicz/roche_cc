@@ -34,8 +34,10 @@ public class ProductController {
 
     @PutMapping("/{productId}")
     public ResponseEntity<?> updateProduct(@RequestBody UpdateProductInput input, @PathVariable String productId) {
-        updateProductUseCase.execute(productId, input);
-
-        return ResponseEntity.ok().build();
+        boolean updated = updateProductUseCase.execute(productId, input);
+        if (updated) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }

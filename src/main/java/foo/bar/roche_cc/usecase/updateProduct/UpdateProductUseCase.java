@@ -11,7 +11,7 @@ public class UpdateProductUseCase {
     }
 
 
-    public void execute(String productId, UpdateProductInput updateProductInput) {
-        productUpdater.updateProduct(productId, updateProductInput);
+    public boolean execute(String productId, UpdateProductInput updateProductInput) {
+        return productUpdater.updateProduct(productId, updateProductInput);
     }
 }
