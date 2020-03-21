@@ -2,11 +2,9 @@ package foo.bar.roche_cc.controller;
 
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductUseCase;
+import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,5 +26,12 @@ public class ProductController {
         UriComponents uriComponents =
                 b.path("/products/{productId}").buildAndExpand(productId);
         return ResponseEntity.created(uriComponents.toUri()).build();
+    }
+
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<?> updateProduct(@RequestBody UpdateProductInput input, @PathVariable String productId) {
+
+        return ResponseEntity.ok().build();
     }
 }
