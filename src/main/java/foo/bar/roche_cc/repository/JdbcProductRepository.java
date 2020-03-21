@@ -3,6 +3,7 @@ package foo.bar.roche_cc.repository;
 import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
+import foo.bar.roche_cc.usecase.deleteProduct.updateProduct.ProductDeleter;
 import foo.bar.roche_cc.usecase.getAllProducts.AllProductsFetcher;
 import foo.bar.roche_cc.usecase.updateProduct.ProductUpdater;
 import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
@@ -13,11 +14,12 @@ import org.springframework.stereotype.Repository;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public class JdbcProductRepository implements ProductRepository, ProductSaver, ProductUpdater, AllProductsFetcher {
+public class JdbcProductRepository implements ProductRepository, ProductSaver, ProductUpdater, AllProductsFetcher, ProductDeleter {
     private static final RowMapper<Product> productRowMapper = (rs, __) ->
             Product.builder()
                     .id(rs.getString("sku"))
@@ -47,6 +49,11 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
     }
 
     @Override
+    public Map<String, Object> getById2(String productId) {
+        return jdbcTemplate.queryForMap("select * from Products where sku = ?", new Object[]{productId});
+    }
+
+    @Override
     public void deleteAll() {
         jdbcTemplate.update("delete from Products");
     }
@@ -68,5 +75,11 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver, P
     @Override
     public List<Product> getAllProducts() {
         return jdbcTemplate.query("select * from Products", productRowMapper);
+    }
+
+    @Override
+    public boolean deleteProduct(String productId) {
+        int rowsAffected = jdbcTemplate.update("update Products set deleted=true where sku = ?", productId);
+        return rowsAffected > 0;
     }
 }

@@ -3,6 +3,7 @@ package foo.bar.roche_cc.controller;
 import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductUseCase;
+import foo.bar.roche_cc.usecase.deleteProduct.updateProduct.DeleteProductUseCase;
 import foo.bar.roche_cc.usecase.getAllProducts.GetAllProductsUseCase;
 import foo.bar.roche_cc.usecase.updateProduct.UpdateProductInput;
 import foo.bar.roche_cc.usecase.updateProduct.UpdateProductUseCase;
@@ -20,11 +21,13 @@ public class ProductController {
     private final CreateProductUseCase createProductUseCase;
     private final UpdateProductUseCase updateProductUseCase;
     private final GetAllProductsUseCase getAllProductsUseCase;
+    private final DeleteProductUseCase deleteProductUseCase;
 
-    public ProductController(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, GetAllProductsUseCase getAllProductsUseCase) {
+    public ProductController(CreateProductUseCase createProductUseCase, UpdateProductUseCase updateProductUseCase, GetAllProductsUseCase getAllProductsUseCase, DeleteProductUseCase deleteProductUseCase) {
         this.createProductUseCase = createProductUseCase;
         this.updateProductUseCase = updateProductUseCase;
         this.getAllProductsUseCase = getAllProductsUseCase;
+        this.deleteProductUseCase = deleteProductUseCase;
     }
 
     @PostMapping()
@@ -44,6 +47,12 @@ public class ProductController {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<?> deleteProduct(@PathVariable String productId) {
+        boolean updated = deleteProductUseCase.execute(productId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping()
