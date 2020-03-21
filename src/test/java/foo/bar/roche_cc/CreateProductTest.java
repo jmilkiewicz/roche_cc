@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -30,6 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class CreateProductTest {
     public static final Pattern JUST_CREATED_PRODUCT_PATTERN = Pattern.compile("^http://localhost/products/(.+)$");
+    private static CreateProductInput sutInput = new CreateProductInput("sample name", BigDecimal.TEN);
+
 
     @Autowired
     private MockMvc mockMvc;
@@ -41,13 +44,15 @@ class CreateProductTest {
     private ProductRepository productRepository;
 
 
-    @Test
-    void shallReturnCreated() throws Exception {
-        CreateProductInput input = new CreateProductInput("sample name", BigDecimal.TEN);
-
-        mockMvc.perform(post("/products")
+    private ResultActions executeSut(CreateProductInput input) throws Exception {
+        return mockMvc.perform(post("/products")
                 .contentType("application/json")
-                .content(objectMapper.writeValueAsString(input)))
+                .content(objectMapper.writeValueAsString(input)));
+    }
+
+    @Test
+    void shallReturnHTTPCreated() throws Exception {
+        executeSut(sutInput)
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", Matchers.matchesPattern(JUST_CREATED_PRODUCT_PATTERN)));
     }
@@ -56,25 +61,24 @@ class CreateProductTest {
     void shallAddNewProductToDB() throws Exception {
         Integer numOfProductsBefore = productRepository.countAll();
 
-        CreateProductInput input = new CreateProductInput("sample name", BigDecimal.TEN);
+        MvcResult mvcResult = executeSut(sutInput).andReturn();
 
-        MvcResult mvcResult = mockMvc.perform(post("/products")
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(input)))
-                .andReturn();
-
-        Integer numOfProductsAfter = productRepository.countAll();
-        assertThat(numOfProductsAfter, is(numOfProductsBefore + 1));
+        assertThat(productRepository.countAll(), is(numOfProductsBefore + 1));
 
         String idOfCreatedProduct = getIdOfCreatedProduct(mvcResult);
 
+        assertProductPropertiesSaved(idOfCreatedProduct, sutInput.getPrice().setScale(2), sutInput.getName());
+
+    }
+
+    private void assertProductPropertiesSaved(String idOfCreatedProduct, BigDecimal expectedPrice, String expectedName) {
         Optional<Product> newProductMaybe = productRepository.getById(idOfCreatedProduct);
         assertThat(newProductMaybe, isPresent());
         Product newProduct = newProductMaybe.get();
-        assertThat(newProduct, hasProperty("name", is(input.getName())));
-        assertThat(newProduct, hasProperty("price", is(input.getPrice().setScale(2))));
+        assertThat(newProduct, hasProperty("id", is(idOfCreatedProduct)));
+        assertThat(newProduct, hasProperty("name", is(expectedName)));
+        assertThat(newProduct, hasProperty("price", is(expectedPrice)));
         assertThat(newProduct, hasProperty("createdAt", notNullValue()));
-
     }
 
     private String getIdOfCreatedProduct(MvcResult mvcResult) {
