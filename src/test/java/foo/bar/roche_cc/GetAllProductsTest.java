@@ -48,16 +48,19 @@ class GetAllProductsTest {
         String productId1 = productRepository.saveProduct(CreateProductInput.builder().name("prod1").price(BigDecimal.ONE).build(), Instant.now().minus(3, ChronoUnit.HOURS));
         String productId2 = productRepository.saveProduct(CreateProductInput.builder().name("prod2").price(BigDecimal.TEN).build(), Instant.now().minus(2, ChronoUnit.MINUTES));
 
-
         MvcResult mvcResult = mockMvc.perform(get("/products")
                 .accept(APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        List<Product> responseBody = objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), new TypeReference<ArrayList<Product>>() {});
+        List<Product> returnedProducts = readFromBody(mvcResult);
 
         Product[] expectedProducts = getProductsByIds(productId1, productId2);
-        assertThat(responseBody, Matchers.containsInAnyOrder(expectedProducts));
+        assertThat(returnedProducts, Matchers.containsInAnyOrder(expectedProducts));
+    }
+
+    private List<Product> readFromBody(MvcResult mvcResult) throws java.io.IOException {
+        return objectMapper.readValue(mvcResult.getResponse().getContentAsByteArray(), new TypeReference<ArrayList<Product>>() {});
     }
 
     private Product[] getProductsByIds(String productId1, String productId2) {
