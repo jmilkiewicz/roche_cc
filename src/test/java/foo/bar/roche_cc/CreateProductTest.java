@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class RocheCcApplicationTests {
+class CreateProductTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -24,7 +24,7 @@ class RocheCcApplicationTests {
 	private ObjectMapper objectMapper;
 
 	@Test
-	void registrationWorksThroughAllLayers() throws Exception {
+	void shallReturnCreated() throws Exception {
 		CreateProductInput input = new CreateProductInput("sample name", BigDecimal.TEN);
 
 		mockMvc.perform(post("/products")
