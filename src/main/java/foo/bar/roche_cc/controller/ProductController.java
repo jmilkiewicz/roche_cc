@@ -23,10 +23,10 @@ public class ProductController {
     @PostMapping()
     public ResponseEntity<?> createProduct(@RequestBody CreateProductInput input, UriComponentsBuilder b) {
 
-        productSaver.saveProduct(input, Instant.now());
+        String productId = productSaver.saveProduct(input, Instant.now());
 
         UriComponents uriComponents =
-                b.path("/products/{id}").buildAndExpand(123);
+                b.path("/products/{productId}").buildAndExpand(productId);
         return ResponseEntity.created(uriComponents.toUri()).build();
     }
 }

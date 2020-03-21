@@ -1,17 +1,29 @@
 package foo.bar.roche_cc.repository;
 
+import foo.bar.roche_cc.model.Product;
 import foo.bar.roche_cc.usecase.createProduct.CreateProductInput;
 import foo.bar.roche_cc.usecase.createProduct.ProductSaver;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public class JdbcProductRepository implements ProductRepository, ProductSaver {
     private final JdbcTemplate jdbcTemplate;
+    private static final RowMapper<Product> productRowMapper = (rs, __) ->
+            Product.builder()
+                    .id(rs.getString("sku"))
+                    .createdAt(rs.getTimestamp("createdAt").toInstant())
+                    .name(rs.getString("name"))
+                    .price(rs.getBigDecimal("price"))
+                    .build();
+
+
 
     public JdbcProductRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -24,8 +36,18 @@ public class JdbcProductRepository implements ProductRepository, ProductSaver {
     }
 
     @Override
-    public void saveProduct(CreateProductInput productInput, Instant now) {
+    public Optional<Product> getById(String productId) {
+        return jdbcTemplate.query("select * from Products where sku = ?", new Object[]{productId}, productRowMapper)
+                .stream()
+                .findFirst();
+
+    }
+
+    @Override
+    public String saveProduct(CreateProductInput productInput, Instant now) {
+        String id = UUID.randomUUID().toString();
         jdbcTemplate.update("insert into Products(sku, createdAt) values(?,?) ",
-                UUID.randomUUID().toString(), Timestamp.from(now));
+                id, Timestamp.from(now));
+        return id;
     }
 }
